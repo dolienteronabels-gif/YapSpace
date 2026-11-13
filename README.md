@@ -59,7 +59,7 @@ Users will be able to:
 - Browse posts through the community feed
 - React to posts
 - Comment on posts
-- View and manage their own posts through the My Posts section
+- View, manage and see their own posts through the My Posts section
 
 ---
 
