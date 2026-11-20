@@ -1,9 +1,7 @@
 package yapspace.web;
 
-/** One logged-in browser. Holds who it is and a one-time message to show on the next page. */
 public final class Session {
 
-    /** A short message shown once at the top of the next page. */
     public record Flash(String message, boolean error) {
     }
 
@@ -41,7 +39,6 @@ public final class Session {
         this.flash = new Flash(message, true);
     }
 
-    /** Returns the message once, then forgets it. */
     public Flash takeFlash() {
         Flash message = flash;
         flash = null;
