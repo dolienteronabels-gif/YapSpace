@@ -10,7 +10,6 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/** Puts all the parts together (services, controllers, router) and runs Java's built-in web server. */
 public class WebServer {
 
     private final HttpServer server;
