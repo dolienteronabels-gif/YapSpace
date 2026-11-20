@@ -2,7 +2,6 @@ package yapspace.model;
 
 import yapspace.exception.ValidationException;
 
-/** The topics a post can be filed under (from the proposal's Category Selection feature). */
 public enum Category {
     SCHOOL("School"),
     FAMILY("Family"),
@@ -24,7 +23,6 @@ public enum Category {
         return label;
     }
 
-    /** Converts text such as "SCHOOL" into a Category, or throws if it is missing or unknown. */
     public static Category parse(String code) {
         if (code == null || code.isBlank()) {
             throw new ValidationException("Please choose a category.");
@@ -36,7 +34,6 @@ public enum Category {
         }
     }
 
-    /** Like parse, but returns null instead of throwing. Used for optional filters. */
     public static Category parseOrNull(String code) {
         try {
             return (code == null || code.isBlank()) ? null : parse(code);
