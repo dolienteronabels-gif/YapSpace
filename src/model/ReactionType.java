@@ -2,7 +2,6 @@ package yapspace.model;
 
 import yapspace.exception.ValidationException;
 
-/** The three ways to react to a post (Support, Relate, Encourage), matching the proposal mockup. */
 public enum ReactionType {
     SUPPORT("Support", "&#10084;&#65039;"),
     RELATE("Relate", "&#128077;"),
