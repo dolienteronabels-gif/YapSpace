@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** What the server sends back: a status code, headers and a body. */
 public final class WebResponse {
 
     private int status = 200;
@@ -38,7 +37,7 @@ public final class WebResponse {
 
     public static WebResponse redirect(String location) {
         WebResponse r = new WebResponse();
-        r.status = 303; // "See Other": the browser follows with a GET after a POST
+        r.status = 303; 
         r.header("Location", location);
         return r;
     }
