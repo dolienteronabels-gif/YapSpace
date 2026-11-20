@@ -1,10 +1,5 @@
 package yapspace.web;
 
-/**
- * The website's stylesheet and script, kept inside the program so there are no
- * extra files to lose. Served at /static/style.css and /static/app.js.
- * (No inline styles or scripts anywhere: the browser is told to refuse them.)
- */
 public final class Assets {
 
     private Assets() {
