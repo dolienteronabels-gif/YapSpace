@@ -9,7 +9,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Everything a page handler needs to know about one browser request. */
 public final class WebRequest {
 
     private final String method;
@@ -42,7 +41,6 @@ public final class WebRequest {
         return cookies.get(name);
     }
 
-    /** A form field (for POST) or a query-string value (for GET). Never null. */
     public String param(String name) {
         String value = form.get(name);
         if (value == null) {
@@ -59,7 +57,6 @@ public final class WebRequest {
         this.pathParams = params;
     }
 
-    /** A number taken from the address, such as the 12 in /posts/12. */
     public int pathInt(String name) {
         try {
             return Integer.parseInt(pathParams.getOrDefault(name, ""));
@@ -85,7 +82,6 @@ public final class WebRequest {
         return user != null;
     }
 
-    /** Pages that need an account call this; visitors are sent to the login page. */
     public User requireUser() {
         if (user == null) {
             throw new AuthenticationException("Please log in to continue.");
@@ -108,7 +104,7 @@ public final class WebRequest {
             try {
                 map.put(URLDecoder.decode(key, StandardCharsets.UTF_8), URLDecoder.decode(value, StandardCharsets.UTF_8));
             } catch (IllegalArgumentException e) {
-                // a badly encoded pair is ignored
+                
             }
         }
         return map;
