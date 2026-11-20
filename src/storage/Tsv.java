@@ -3,11 +3,7 @@ package yapspace.storage;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Tiny helper for the data files. Every record is one line; fields are separated
- * by a TAB. Tabs, new lines and backslashes inside a field are escaped so a post
- * that contains several lines still fits on one line of the file.
- */
+
 final class Tsv {
 
     private Tsv() {
