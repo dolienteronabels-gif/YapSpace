@@ -19,6 +19,16 @@ public class Main {
 
     public static void main(String[] args) {
         int port = 8080;
+
+String envPort = System.getenv("PORT");
+if (envPort != null && !envPort.isBlank()) {
+    try {
+        port = Integer.parseInt(envPort);
+    } catch (NumberFormatException e) {
+        System.err.println("Invalid PORT environment variable.");
+        return;
+    }
+}
         Path dataDir = Paths.get("data");
         for (String arg : args) {
             if (arg.startsWith("--port=")) {
