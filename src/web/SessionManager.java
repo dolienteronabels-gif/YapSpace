@@ -5,7 +5,6 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Creates, finds and removes login sessions (kept in memory; restarting the program logs everybody out). */
 public class SessionManager {
 
     public static final String COOKIE_NAME = "YAPSESSION";
@@ -46,12 +45,10 @@ public class SessionManager {
         }
     }
 
-    /** Value for the Set-Cookie header that logs the browser in. HttpOnly keeps scripts away from it. */
     public String loginCookie(Session session) {
         return COOKIE_NAME + "=" + session.getToken() + "; Path=/; HttpOnly; SameSite=Lax";
     }
 
-    /** Value for the Set-Cookie header that logs the browser out. */
     public String logoutCookie() {
         return COOKIE_NAME + "=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0";
     }
