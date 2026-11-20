@@ -2,7 +2,6 @@ package yapspace.model;
 
 import java.time.LocalDateTime;
 
-/** A comment that one user leaves on a post. */
 public class Comment extends BaseEntity {
 
     private final int postId;
@@ -10,7 +9,6 @@ public class Comment extends BaseEntity {
     private String content;
     private LocalDateTime editedAt;
 
-    /** Used when loading saved data. */
     public Comment(int id, int postId, String author, String content,
                    LocalDateTime createdAt, LocalDateTime editedAt) {
         super(id, createdAt);
@@ -20,7 +18,6 @@ public class Comment extends BaseEntity {
         this.editedAt = editedAt;
     }
 
-    /** Used when a user writes a new comment. */
     public Comment(int id, int postId, String author, String content) {
         this(id, postId, author, content, LocalDateTime.now(), null);
     }
