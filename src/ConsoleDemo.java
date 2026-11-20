@@ -15,10 +15,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A small console demo that shows the foundation classes working together.
- * Run it to check the basic classes without the website.
- */
 public class ConsoleDemo {
 
     public static void main(String[] args) {
