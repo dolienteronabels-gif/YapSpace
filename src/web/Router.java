@@ -18,11 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * The front door of the website. Every request arrives here; the router
- * 1) works out who is logged in, 2) finds the matching page handler, and
- * 3) turns exceptions into friendly error pages (exception handling).
- */
+
 public class Router implements HttpHandler {
 
     private static final int MAX_BODY_BYTES = 20_000;
@@ -128,7 +124,7 @@ public class Router implements HttpHandler {
         }
     }
 
-    /** Looks at the login cookie and, if it is valid, remembers who the visitor is. */
+    
     private void attachLogin(WebRequest req) {
         Session session = sessions.find(req.cookie(SessionManager.COOKIE_NAME));
         if (session == null) {
