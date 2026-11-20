@@ -2,7 +2,6 @@ package yapspace.model;
 
 import java.time.LocalDateTime;
 
-/** A normal member (aged 13 and above). Can only remove their own content. */
 public class RegularUser extends User {
 
     public RegularUser(int id, String username, String email, String salt, String passwordHash,
