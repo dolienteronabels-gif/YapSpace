@@ -8,13 +8,6 @@ import java.net.BindException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Starts YapSpace. Run this class, then open http://localhost:8080 in your browser.
- *
- * Optional program arguments:
- *   --port=8081        use another port (default 8080)
- *   --data=somefolder  where to save the data (default: the "data" folder in the project)
- */
 public class Main {
 
     public static void main(String[] args) {
