@@ -1,0 +1,32 @@
+import yapspace.service.UserService;
+import yapspace.storage.DataStore;
+import yapspace.model.User;
+import java.nio.file.Paths;
+
+public class TestUserRegistration {
+
+    public static void main(String[] args) {
+
+        DataStore store = new DataStore(Paths.get("data"));
+        UserService users = new UserService(store);
+
+        try {
+            User user = users.register(
+                    "newuser",
+                    "newuser@example.com",
+                    "NewPassword123!",
+                    "NewPassword123!",
+                    true
+            );
+
+            System.out.println("REGISTRATION SUCCESSFUL!");
+            System.out.println("Username: " + user.getUsername());
+            System.out.println("Email: " + user.getEmail());
+            System.out.println("User ID: " + user.getId());
+
+        } catch (Exception e) {
+            System.out.println("REGISTRATION FAILED!");
+            e.printStackTrace();
+        }
+    }
+}

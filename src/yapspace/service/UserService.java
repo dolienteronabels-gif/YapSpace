@@ -2,89 +2,100 @@ package yapspace.service;
 
 import yapspace.exception.AuthenticationException;
 import yapspace.exception.ValidationException;
-import yapspace.model.RegularUser;
+import yapspace.model.Role;
 import yapspace.model.User;
+import yapspace.repository.UserRepository;
 import yapspace.storage.DataStore;
 
-import java.time.LocalDateTime;
-
-/** Registration and login (the register() and login() methods from the proposal). */
 public class UserService {
 
     private static final String DUMMY_SALT = PasswordHasher.newSalt();
 
     private final DataStore store;
+    private final UserRepository repository;
 
     public UserService(DataStore store) {
         this.store = store;
+        this.repository = new UserRepository();
     }
 
-    /** Creates a new account for someone aged 13 or above. */
-    public User register(String username, String email, String password, String confirmPassword,
-                         boolean ageConfirmed) {
+    public User register(String username, String email, String password,
+                         String confirmPassword, boolean ageConfirmed) {
+
         String cleanName = Validator.username(username);
         String cleanEmail = Validator.email(email);
+
         Validator.password(password);
+
         if (!password.equals(confirmPassword)) {
             throw new ValidationException("The two passwords do not match.");
         }
+
         if (!ageConfirmed) {
-            throw new ValidationException("YapSpace is for people aged 13 and above. Please confirm your age.");
+            throw new ValidationException(
+                    "YapSpace is for people aged 13 and above. Please confirm your age.");
         }
-        synchronized (store) {
-            if (findByUsername(cleanName) != null) {
-                throw new ValidationException("That username is already taken.");
-            }
-            for (User u : store.users()) {
-                if (u.getEmail().equalsIgnoreCase(cleanEmail)) {
-                    throw new ValidationException("That email address is already registered.");
-                }
-            }
-            String salt = PasswordHasher.newSalt();
-            User user = new RegularUser(store.nextUserId(), cleanName, cleanEmail, salt,
-                    PasswordHasher.hash(password, salt), LocalDateTime.now());
-            store.users().add(user);
-            store.saveUsers();
-            return user;
+
+        if (repository.findByUsername(cleanName) != null) {
+            throw new ValidationException("That username is already taken.");
+        }
+
+        if (repository.existsByEmail(cleanEmail)) {
+            throw new ValidationException("That email address is already registered.");
+        }
+
+        String salt = PasswordHasher.newSalt();
+        String passwordHash = PasswordHasher.hash(password, salt);
+
+        try {
+            int userId = repository.save(
+                    cleanName,
+                    cleanEmail,
+                    passwordHash,
+                    salt,
+                    Role.USER
+            );
+
+            return repository.findById(userId);
+
+        } catch (RuntimeException e) {
+            throw new ValidationException(
+                    "Unable to create account. Please check your details and try again.");
         }
     }
 
-    /** Checks the username and password. The error message is the same for both mistakes on purpose. */
     public User login(String username, String password) {
+
         String name = username == null ? "" : username.trim();
+
         if (name.isEmpty() || password == null || password.isEmpty()) {
-            throw new ValidationException("Please enter your username and password.");
+            throw new ValidationException(
+                    "Please enter your username and password.");
         }
-        User user = findByUsername(name);
+
+        User user = repository.findByUsername(name);
+
         if (user == null) {
-            PasswordHasher.hash(password, DUMMY_SALT); // same effort whether or not the name exists
-            throw new AuthenticationException("Incorrect username or password.");
+            PasswordHasher.hash(password, DUMMY_SALT);
+            throw new AuthenticationException(
+                    "Incorrect username or password.");
         }
-        if (!PasswordHasher.matches(password, user.getSalt(), user.getPasswordHash())) {
-            throw new AuthenticationException("Incorrect username or password.");
+
+        if (!PasswordHasher.matches(
+                password, user.getSalt(), user.getPasswordHash())) {
+
+            throw new AuthenticationException(
+                    "Incorrect username or password.");
         }
+
         return user;
     }
 
     public User findByUsername(String username) {
-        synchronized (store) {
-            for (User u : store.users()) {
-                if (u.getUsername().equalsIgnoreCase(username)) {
-                    return u;
-                }
-            }
-            return null;
-        }
+        return repository.findByUsername(username);
     }
 
     public User findById(int id) {
-        synchronized (store) {
-            for (User u : store.users()) {
-                if (u.getId() == id) {
-                    return u;
-                }
-            }
-            return null;
-        }
+        return repository.findById(id);
     }
 }

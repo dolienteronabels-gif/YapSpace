@@ -11,6 +11,9 @@ import yapspace.model.Reaction;
 import yapspace.model.ReactionType;
 import yapspace.model.User;
 import yapspace.storage.DataStore;
+import yapspace.repository.PostRepository;
+import yapspace.repository.CommentRepository;
+import yapspace.repository.ReactionRepository;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -18,243 +21,220 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Everything about posts, comments and reactions: createPost(), editPost(),
- * deletePost(), addComment(), editComment(), deleteComment(), reactToPost()
- * and removeReaction() from the proposal.
- *
- * Permission rules are asked from the user object (user.canDelete(post)), so
- * polymorphism gives the right answer for a RegularUser or an AdminUser.
- */
 public class PostService {
 
-    private final DataStore store;
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final ReactionRepository reactionRepository;
 
     public PostService(DataStore store) {
-        this.store = store;
+        this.postRepository = new PostRepository();
+        this.commentRepository = new CommentRepository();
+        this.reactionRepository = new ReactionRepository();
     }
 
-    // ------------------------------------------------------------------ posts
-
-    public Post createPost(User author, String content, String categoryCode, String feelingCode) {
+    public Post createPost(User author, String content,
+                           String categoryCode, String feelingCode) {
         String text = Validator.postContent(content);
         Category category = Category.parse(categoryCode);
         Feeling feeling = Feeling.parse(feelingCode);
-        synchronized (store) {
-            Post post = new Post(store.nextPostId(), author.getUsername(), text, category, feeling);
-            store.posts().add(post);
-            store.savePosts();
-            return post;
-        }
+
+        int postId = postRepository.save(
+                author.getUsername(), text, category, feeling);
+
+        return getPost(postId);
     }
 
-    public Post editPost(User editor, int postId, String content, String categoryCode, String feelingCode) {
+    public Post editPost(User editor, int postId, String content,
+                         String categoryCode, String feelingCode) {
         String text = Validator.postContent(content);
         Category category = Category.parse(categoryCode);
         Feeling feeling = Feeling.parse(feelingCode);
-        synchronized (store) {
-            Post post = getPost(postId);
-            if (!editor.canEdit(post)) {
-                throw new PermissionException("You can only edit your own posts.");
-            }
-            post.update(text, category, feeling);
-            store.savePosts();
-            return post;
+
+        Post post = getPost(postId);
+
+        if (!editor.canEdit(post)) {
+            throw new PermissionException(
+                    "You can only edit your own posts.");
         }
+
+        post.update(text, category, feeling);
+        postRepository.update(post);
+
+        return getPost(postId);
     }
 
-    /** Deletes a post together with its comments and reactions. */
     public void deletePost(User actor, int postId) {
-        synchronized (store) {
-            Post post = getPost(postId);
-            if (!actor.canDelete(post)) {
-                throw new PermissionException("You can only delete your own posts.");
-            }
-            store.posts().remove(post);
-            store.comments().removeIf(c -> c.getPostId() == postId);
-            store.reactions().removeIf(r -> r.getPostId() == postId);
-            store.savePosts();
-            store.saveComments();
-            store.saveReactions();
+        Post post = getPost(postId);
+
+        if (!actor.canDelete(post)) {
+            throw new PermissionException(
+                    "You can only delete your own posts.");
         }
+
+        reactionRepository.deleteByPost(postId);
+        commentRepository.deleteByPost(postId);
+        postRepository.delete(postId);
     }
 
     public Post getPost(int postId) {
-        synchronized (store) {
-            for (Post p : store.posts()) {
-                if (p.getId() == postId) {
-                    return p;
-                }
-            }
+        Post post = postRepository.findById(postId);
+
+        if (post == null) {
+            throw new NotFoundException(
+                    "That post does not exist (it may have been deleted).");
         }
-        throw new NotFoundException("That post does not exist (it may have been deleted).");
+
+        return post;
     }
 
-    /** The community feed: every post, newest first. */
     public List<Post> allPosts() {
-        List<Post> list;
-        synchronized (store) {
-            list = new ArrayList<>(store.posts());
-        }
-        list.sort(newestFirst());
-        return list;
+        List<Post> posts = new ArrayList<>(
+                postRepository.findAll());
+
+        posts.sort(newestFirst());
+        return posts;
     }
 
-    /** The "My Posts" section: only this user's posts, newest first. */
     public List<Post> postsBy(String username) {
-        List<Post> mine = new ArrayList<>();
-        synchronized (store) {
-            for (Post p : store.posts()) {
-                if (p.isOwnedBy(username)) {
-                    mine.add(p);
-                }
-            }
-        }
-        mine.sort(newestFirst());
-        return mine;
+        List<Post> posts = new ArrayList<>(
+                postRepository.findByAuthor(username));
+
+        posts.sort(newestFirst());
+        return posts;
     }
 
     private static Comparator<Post> newestFirst() {
-        return Comparator.comparing(Post::getCreatedAt).thenComparingInt(Post::getId).reversed();
+        return Comparator.comparing(Post::getCreatedAt)
+                .thenComparingInt(Post::getId)
+                .reversed();
     }
 
-    // -------------------------------------------------------------- reactions
+    public ReactionType reactToPost(
+            User user, int postId, String reactionCode) {
 
-    /**
-     * First click adds the reaction, the same reaction again removes it,
-     * a different reaction switches it. Returns the reaction afterwards (null if removed).
-     */
-    public ReactionType reactToPost(User user, int postId, String reactionCode) {
         ReactionType type = ReactionType.parse(reactionCode);
-        synchronized (store) {
-            getPost(postId);
-            Reaction existing = findReaction(postId, user.getUsername());
-            if (existing == null) {
-                return addReaction(user, postId, type);
-            }
-            if (existing.getType() == type) {
-                removeReaction(user, postId);
-                return null;
-            }
-            existing.setType(type);
-            store.saveReactions();
-            return type;
+        getPost(postId);
+
+        Reaction existing =
+                reactionRepository.findByUser(
+                        postId, user.getUsername());
+
+        if (existing == null) {
+            return addReaction(user, postId, type);
         }
+
+        if (existing.getType() == type) {
+            removeReaction(user, postId);
+            return null;
+        }
+
+        reactionRepository.update(
+                postId, user.getUsername(), type);
+
+        return type;
     }
 
-    public ReactionType addReaction(User user, int postId, ReactionType type) {
-        synchronized (store) {
-            getPost(postId);
-            if (findReaction(postId, user.getUsername()) != null) {
-                throw new ValidationException("You already reacted to this post.");
-            }
-            store.reactions().add(new Reaction(store.nextReactionId(), postId, user.getUsername(), type));
-            store.saveReactions();
-            return type;
+    public ReactionType addReaction(
+            User user, int postId, ReactionType type) {
+
+        getPost(postId);
+
+        if (reactionRepository.findByUser(
+                postId, user.getUsername()) != null) {
+            throw new ValidationException(
+                    "You already reacted to this post.");
         }
+
+        reactionRepository.save(
+                postId, user.getUsername(), type);
+
+        return type;
     }
 
     public void removeReaction(User user, int postId) {
-        synchronized (store) {
-            Reaction existing = findReaction(postId, user.getUsername());
-            if (existing != null) {
-                store.reactions().remove(existing);
-                store.saveReactions();
-            }
-        }
+        reactionRepository.delete(
+                postId, user.getUsername());
     }
 
-    private Reaction findReaction(int postId, String username) {
-        for (Reaction r : store.reactions()) {
-            if (r.getPostId() == postId && r.getUsername().equalsIgnoreCase(username)) {
-                return r;
-            }
-        }
-        return null;
-    }
+    public ReactionType reactionOf(
+            int postId, String username) {
 
-    public ReactionType reactionOf(int postId, String username) {
-        synchronized (store) {
-            Reaction r = findReaction(postId, username);
-            return r == null ? null : r.getType();
-        }
+        Reaction reaction =
+                reactionRepository.findByUser(postId, username);
+
+        return reaction == null ? null : reaction.getType();
     }
 
     public Map<ReactionType, Integer> reactionCounts(int postId) {
-        Map<ReactionType, Integer> counts = new EnumMap<>(ReactionType.class);
-        for (ReactionType t : ReactionType.values()) {
-            counts.put(t, 0);
+        Map<ReactionType, Integer> counts =
+                new EnumMap<>(ReactionType.class);
+
+        for (ReactionType type : ReactionType.values()) {
+            counts.put(type, 0);
         }
-        synchronized (store) {
-            for (Reaction r : store.reactions()) {
-                if (r.getPostId() == postId) {
-                    counts.merge(r.getType(), 1, Integer::sum);
-                }
-            }
+
+        for (Reaction reaction :
+                reactionRepository.findByPost(postId)) {
+            counts.merge(reaction.getType(), 1, Integer::sum);
         }
+
         return counts;
     }
 
-    // --------------------------------------------------------------- comments
+    public Comment addComment(
+            User author, int postId, String content) {
 
-    public Comment addComment(User author, int postId, String content) {
         String text = Validator.commentContent(content);
-        synchronized (store) {
-            getPost(postId);
-            Comment comment = new Comment(store.nextCommentId(), postId, author.getUsername(), text);
-            store.comments().add(comment);
-            store.saveComments();
-            return comment;
-        }
+        getPost(postId);
+
+        int commentId = commentRepository.save(
+                postId, author.getUsername(), text);
+
+        return getComment(commentId);
     }
 
-    public Comment editComment(User editor, int commentId, String content) {
+    public Comment editComment(
+            User editor, int commentId, String content) {
+
         String text = Validator.commentContent(content);
-        synchronized (store) {
-            Comment comment = getComment(commentId);
-            if (!editor.canEdit(comment)) {
-                throw new PermissionException("You can only edit your own comments.");
-            }
-            comment.edit(text);
-            store.saveComments();
-            return comment;
+        Comment comment = getComment(commentId);
+
+        if (!editor.canEdit(comment)) {
+            throw new PermissionException(
+                    "You can only edit your own comments.");
         }
+
+        comment.edit(text);
+        commentRepository.update(comment);
+
+        return getComment(commentId);
     }
 
     public void deleteComment(User actor, int commentId) {
-        synchronized (store) {
-            Comment comment = getComment(commentId);
-            if (!actor.canDelete(comment)) {
-                throw new PermissionException("You can only delete your own comments.");
-            }
-            store.comments().remove(comment);
-            store.saveComments();
+        Comment comment = getComment(commentId);
+
+        if (!actor.canDelete(comment)) {
+            throw new PermissionException(
+                    "You can only delete your own comments.");
         }
+
+        commentRepository.delete(commentId);
     }
 
     public Comment getComment(int commentId) {
-        synchronized (store) {
-            for (Comment c : store.comments()) {
-                if (c.getId() == commentId) {
-                    return c;
-                }
-            }
+        Comment comment = commentRepository.findById(commentId);
+
+        if (comment == null) {
+            throw new NotFoundException(
+                    "That comment does not exist (it may have been deleted).");
         }
-        throw new NotFoundException("That comment does not exist (it may have been deleted).");
+
+        return comment;
     }
 
-    /** Comments on a post, oldest first, so the conversation reads in order. */
     public List<Comment> commentsFor(int postId) {
-        List<Comment> list = new ArrayList<>();
-        synchronized (store) {
-            for (Comment c : store.comments()) {
-                if (c.getPostId() == postId) {
-                    list.add(c);
-                }
-            }
-        }
-        list.sort(Comparator.comparing(Comment::getCreatedAt).thenComparingInt(Comment::getId));
-        return list;
+        return commentRepository.findByPost(postId);
     }
 
     public int commentCount(int postId) {
