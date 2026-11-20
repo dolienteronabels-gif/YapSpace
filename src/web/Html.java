@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-/** Small helpers for building safe HTML. Everything a user typed goes through esc() first. */
 public final class Html {
 
     private static final DateTimeFormatter FULL = DateTimeFormatter.ofPattern("MMM d, yyyy h:mm a", Locale.ENGLISH);
@@ -16,7 +15,7 @@ public final class Html {
     private Html() {
     }
 
-    /** Escapes text so it can never be read by the browser as HTML (prevents XSS). */
+
     public static String esc(String text) {
         if (text == null) {
             return "";
@@ -36,7 +35,7 @@ public final class Html {
         return sb.toString();
     }
 
-    /** Escapes text and keeps the user's line breaks. */
+    
     public static String multiline(String text) {
         return esc(text).replace("\n", "<br>");
     }
@@ -45,7 +44,7 @@ public final class Html {
         return URLEncoder.encode(text == null ? "" : text, StandardCharsets.UTF_8);
     }
 
-    /** "just now", "5 min ago", "3 h ago", "2 d ago", or the date for older items. */
+    
     public static String timeAgo(LocalDateTime time) {
         Duration d = Duration.between(time, LocalDateTime.now());
         long minutes = d.toMinutes();
@@ -70,12 +69,12 @@ public final class Html {
         return time.format(FULL);
     }
 
-    /** A &lt;time&gt; tag with the relative time as text and the exact time as a tooltip. */
+    
     public static String timeTag(LocalDateTime time) {
         return "<time datetime=\"" + time + "\" title=\"" + esc(fullDate(time)) + "\">" + esc(timeAgo(time)) + "</time>";
     }
 
-    /** Only allows redirects to pages on this site (stops "open redirect" tricks). */
+    
     public static String safeNext(String next, String fallback) {
         if (next == null || next.isEmpty() || next.length() > 300) {
             return fallback;
@@ -91,7 +90,7 @@ public final class Html {
         return next;
     }
 
-    /** Colour slot (0-7) for a user's avatar, always the same for the same name. */
+   
     public static int avatarSlot(String username) {
         return Math.floorMod(username.toLowerCase(Locale.ROOT).hashCode(), 8);
     }
