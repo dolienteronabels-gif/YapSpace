@@ -5,7 +5,6 @@ import yapspace.exception.ValidationException;
 import yapspace.model.User;
 import yapspace.service.UserService;
 
-/** Landing page, registration, login and logout. */
 public class AuthController {
 
     private final UserService users;
@@ -78,7 +77,7 @@ public class AuthController {
         return WebResponse.redirect("/").header("Set-Cookie", sessions.logoutCookie());
     }
 
-    /** A brand-new session is created at every login (never reuse an old one). */
+    
     private WebResponse startSession(User user, String welcome) {
         Session session = sessions.create(user.getId());
         session.setFlash(welcome);
