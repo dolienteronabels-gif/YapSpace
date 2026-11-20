@@ -2,10 +2,6 @@ package yapspace.model;
 
 import yapspace.exception.ValidationException;
 
-/**
- * The feelings a user can attach to a post (from the proposal's Feeling Selection feature).
- * The icon is an HTML numeric entity so this file stays plain ASCII.
- */
 public enum Feeling {
     HAPPY("Happy", "&#128522;"),
     SAD("Sad", "&#128546;"),
@@ -28,7 +24,6 @@ public enum Feeling {
         return label;
     }
 
-    /** HTML entity for the emoji, safe to place directly in a page. */
     public String getIcon() {
         return icon;
     }
