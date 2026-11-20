@@ -12,10 +12,6 @@ import yapspace.service.Validator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Builds the HTML of every page. Anything a user typed is passed through
- * Html.esc(...) before it is placed in a page, so it can never run as code.
- */
 public class Views {
 
     private enum CardMode { FEED, MINE, DETAIL }
@@ -37,8 +33,6 @@ public class Views {
     private static String plural(int n, String word) {
         return n + " " + word + (n == 1 ? "" : "s");
     }
-
-    // ------------------------------------------------------------------ layout
 
     private String layout(WebRequest req, String title, String active, String width, String body) {
         User me = req.getUser();
@@ -101,7 +95,6 @@ public class Views {
                 + esc(Html.initial(username)) + "</span>";
     }
 
-    // ------------------------------------------------------------ public pages
 
     public String landing(WebRequest req) {
         StringBuilder b = new StringBuilder();
@@ -167,7 +160,6 @@ public class Views {
         return layout(req, "Log in", "", "narrow", body);
     }
 
-    // ------------------------------------------------------------------- feed
 
     public String feed(WebRequest req, List<Post> list) {
         StringBuilder b = new StringBuilder();
@@ -197,7 +189,6 @@ public class Views {
         return layout(req, "My Posts", "mine", "", b.toString());
     }
 
-    // ------------------------------------------------------------- post cards
 
     private String postCard(WebRequest req, Post p, CardMode mode) {
         User me = req.getUser();
@@ -251,9 +242,7 @@ public class Views {
                 + hidden("next", next) + "<button class=\"link-btn danger\" type=\"submit\">Delete</button></form>";
     }
 
-    // ------------------------------------------------------------ post screens
-
-    /** The create / edit form. Pass the existing post when editing, otherwise null. */
+  
     public String postForm(WebRequest req, Post existing, String error, String content, String category, String feeling) {
         boolean editing = existing != null;
         String action = editing ? "/posts/" + existing.getId() + "/edit" : "/posts";
@@ -328,8 +317,6 @@ public class Views {
                 + "<a class=\"btn btn-ghost\" href=\"/posts/" + comment.getPostId() + "#comment-" + comment.getId() + "\">Cancel</a></div></form></div>";
         return layout(req, "Edit comment", "feed", "", body);
     }
-
-    // ------------------------------------------------------------------ errors
 
     public WebResponse error(WebRequest req, int status, String title, String message) {
         String body = "<div class=\"card empty\"><span class=\"icon\" aria-hidden=\"true\">&#128533;</span><h1>" + esc(title)
