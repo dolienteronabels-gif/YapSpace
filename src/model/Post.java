@@ -2,7 +2,6 @@ package yapspace.model;
 
 import java.time.LocalDateTime;
 
-/** A text post shared in the community feed, with a category and a feeling. */
 public class Post extends BaseEntity {
 
     private final String author;
@@ -11,7 +10,6 @@ public class Post extends BaseEntity {
     private Feeling feeling;
     private LocalDateTime editedAt;
 
-    /** Used when loading saved data. */
     public Post(int id, String author, String content, Category category, Feeling feeling,
                 LocalDateTime createdAt, LocalDateTime editedAt) {
         super(id, createdAt);
@@ -22,7 +20,6 @@ public class Post extends BaseEntity {
         this.editedAt = editedAt;
     }
 
-    /** Used when a user publishes a brand-new post. */
     public Post(int id, String author, String content, Category category, Feeling feeling) {
         this(id, author, content, category, feeling, LocalDateTime.now(), null);
     }
@@ -55,7 +52,6 @@ public class Post extends BaseEntity {
         return author.equalsIgnoreCase(username);
     }
 
-    /** Applies an edit and remembers when it happened. */
     public void update(String content, Category category, Feeling feeling) {
         this.content = content;
         this.category = category;
