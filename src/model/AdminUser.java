@@ -2,7 +2,6 @@ package yapspace.model;
 
 import java.time.LocalDateTime;
 
-/** The administrator. Same data as a User, but with moderation powers (polymorphism). */
 public class AdminUser extends User {
 
     public AdminUser(int id, String username, String email, String salt, String passwordHash,
