@@ -7,7 +7,7 @@ import yapspace.model.Post;
 import yapspace.model.User;
 import yapspace.service.PostService;
 
-/** Feed, My Posts, creating / editing / deleting posts, reactions and comments. */
+
 public class PostController {
 
     private final PostService posts;
