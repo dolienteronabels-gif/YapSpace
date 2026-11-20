@@ -22,14 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * DATA HANDLING: keeps every user, post, comment and reaction in an ArrayList
- * and saves them to plain text files (in the "data" folder) so nothing is lost
- * when the program is closed.
- *
- * Services wrap their work in synchronized (store) { ... } so two web requests
- * never change the lists at the same moment.
- */
+
 public class DataStore {
 
     private final Path dir;
@@ -81,7 +74,7 @@ public class DataStore {
 
     // ------------------------------------------------------------- loading
 
-    /** Reads the data files (if they exist). A broken line is skipped instead of crashing the program. */
+    
     public synchronized void load() {
         try {
             Files.createDirectories(dir);
@@ -204,7 +197,7 @@ public class DataStore {
                 .collect(Collectors.toList()));
     }
 
-    /** Writes to a temporary file first, then swaps it in, so a crash never leaves half a file. */
+    
     private void write(String fileName, List<String> lines) {
         try {
             Files.createDirectories(dir);
