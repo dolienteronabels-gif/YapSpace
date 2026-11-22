@@ -4,11 +4,12 @@ WORKDIR /app
 
 COPY src ./src
 COPY lib ./lib
+COPY database ./database
 
 RUN mkdir -p out \
     && find src -name "*.java" > sources.txt \
-    && javac -cp "lib/mysql-connector-j-26.10.0.jar" -d out @sources.txt
+    && javac -cp "lib/mysql-connector-j-26.10.0.jar:lib/postgresql-42.7.14.jar" -d out @sources.txt
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "exec java -cp 'out:lib/mysql-connector-j-26.10.0.jar' yapspace.Main"]
+CMD ["sh", "-c", "exec java -cp 'out:lib/mysql-connector-j-26.10.0.jar:lib/postgresql-42.7.14.jar' yapspace.Main"]
