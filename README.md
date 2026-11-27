@@ -1,276 +1,279 @@
-YapSpace
+<div align="center">
 
+# 🌌 YapSpace
+### *A space where thoughts find people.*
 
+**Share your thoughts. Name your feelings. Find your people.**
 
-YapSpace is a Java-based digital community platform where users aged 13 and above can share their thoughts, feelings, and experiences through posts while connecting and interacting with others through reactions and comments.
+[![Java](https://img.shields.io/badge/Java-17%2B-orange?style=for-the-badge&logo=openjdk)](https://www.java.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-Database-blue?style=for-the-badge&logo=mysql)](https://www.mysql.com/)
+[![OOP](https://img.shields.io/badge/Object--Oriented-Java-purple?style=for-the-badge)](#-oop-principles-in-yapspace)
+[![Made for OOP 101](https://img.shields.io/badge/Made_for-OOP_101-pink?style=for-the-badge)](#-the-team)
 
+> 💭 **You don't have to have the perfect words. Just a place to start.**
+>
+> *Built with the hope that even a small thought, shared with courage, can remind someone that they are not alone.*
 
+</div>
 
-Made for OOP 101 (Team 4, Ro Ro Row Your Code).
+---
 
+## 🧭 Quick Navigation
 
+<details>
+<summary>Click to jump around the README</summary>
 
-Project Background
+- [Features](#-explore-yapspace)
+- [Screenshot Gallery](#-a-glimpse-of-yapspace)
+- [Categories & Feelings](#-categories--feelings)
+- [OOP Principles](#-oop-principles-in-yapspace)
+- [Tech Stack](#-built-with)
+- [Run Locally](#-run-locally)
+- [Project Structure](#-project-structure)
+- [Team](#-the-team)
+- [Acknowledgement](#-acknowledgement)
 
+</details>
 
+## ✨ What is YapSpace?
 
-People aged 13 and above experience different concerns involving school, family, friendships, relationships, personal experiences, and emotional well-being. YapSpace aims to provide a digital community space where users can express themselves and connect with others.
+YapSpace is a Java-based digital community platform for users **aged 13 and above** to share thoughts, feelings, and experiences. From school stress and family moments to friendships, relationships, hobbies, and random thoughts—YapSpace gives users a place to express themselves and connect through shared experiences.
 
+More than a programming project, YapSpace carries a simple reminder: **every person has a story worth sharing, and every feeling deserves to be met with kindness. No thought is too small, no struggle too ordinary, and no joy too simple to deserve being heard.** We hope this little space encourages people to speak honestly, listen gently, and find comfort in knowing that someone else may understand. Even if we cannot solve every problem, we can make room for one another—and sometimes, that is a meaningful beginning.
 
+## 🪄 Explore YapSpace
 
-Project Objectives
+| Feature | What you can do |
+|---|---|
+| 🔐 **Sign Up & Login** | Create an account and securely sign in. |
+| 📝 **Create a Post** | Share thoughts and experiences with the community. |
+| 🏷️ **Categories** | Organize posts by topic. |
+| 💗 **Feelings** | Add a feeling to express your current mood. |
+| 🤝 **Reactions** | Support, Relate, or Encourage someone's post. |
+| 💬 **Comments** | Leave comments and interact with posts. |
+| 📰 **Community Feed** | Browse posts, with newest posts shown first. |
+| 👤 **My Posts** | Find, edit, or delete your own posts. |
 
+## 📸 A glimpse of YapSpace
 
+<details open>
+<summary><b>✨ Explore the YapSpace interface — click to collapse or expand</b></summary>
 
-General Objective
+<div align="center">
 
+### 🪄 Landing Page
+*Thoughts have a place. Feelings have a voice.*
 
+![YapSpace Landing Page](assets/screenshots/landing-page.png)
 
-To develop a Java-based digital community application that provides users aged 13 and above with a space to express their thoughts, feelings, and experiences.
+### 🔐 Login
+*Welcome back to your space.*
 
+![YapSpace Login Page](assets/screenshots/login-page.png)
 
+### 📰 Community Feed
+*Explore thoughts, stories, and perspectives from the community.*
 
-Specific Objectives
+![YapSpace Community Feed](assets/screenshots/community-feed.png)
 
+### ✍️ Create a Post
+*Put it into words. Choose a category and feeling.*
 
+![YapSpace Create Post](assets/screenshots/create-post.png)
 
-1\. Develop a registration and login system.
+### 👤 My Posts
+*Your thoughts, all in one place.*
 
-2\. Allow users to create, edit, and delete their own posts.
+![YapSpace My Posts](assets/screenshots/my-posts.jpg)
 
-3\. Provide categories for organizing posts.
+### 💬 Discussion
+*Conversations begin when we listen and respond.*
 
-4\. Allow users to express their current feelings.
+![YapSpace Discussion](assets/screenshots/discussion.jpg)
 
-5\. Enable reactions and comments.
+### 🗨️ Comment Editor
+*Add your voice to the conversation.*
 
-6\. Display posts through a community feed.
+![YapSpace Comment Editor](assets/screenshots/comment-editor.jpg)
 
-7\. Provide a My Posts section.
+### 📄 Post Detail
+*See a post and its interactions.*
 
-8\. Apply Java and Object-Oriented Programming concepts.
+![YapSpace Post Detail](assets/screenshots/post-detail.jpg)
 
+</div>
+</details>
 
+## 💬 Categories & Feelings
 
-What It Does
+**Categories:** School · Family · Friendship · Relationship · Mental Health · Career · Hobbies · Personal · Random Thoughts
 
+**Feelings:** Happy · Sad · Angry · Stressed · Excited · Tired · Confused · Neutral
 
+## 🧠 OOP Principles in YapSpace
 
-\- Sign up and log in.
+We applied Object-Oriented Programming to organize our project into reusable classes, keep data protected, and make user behavior depend on account type.
 
-\- Community feed with posts, newest first.
+<details open>
+<summary><b>1. Encapsulation — Protecting data 🔒(Click here for more)</b></summary>
 
-\- Create posts with a category and feeling.
+**Where:** `User`, `Post`, `Comment`, `Reaction`, and other model classes.
 
-\- React to posts (Support, Relate, Encourage).
+**How:** Fields are declared `private` and accessed through methods such as getters and setters. This helps control how information is read or updated instead of exposing fields directly.
 
-\- Add, edit, and delete comments.
+**Example:** `Post` keeps its content and related information inside the object; changes are made through its methods.
+</details>
 
-\- My Posts: view, edit, and delete your own posts.
 
+<details>
+<summary><b>2. Inheritance — Reusing shared features 🧬(Click here for more)</b></summary>
 
+**Where:** `RegularUser` and `AdminUser` extend the abstract `User` class. `Post`, `Comment`, and `Reaction` also extend `BaseEntity`.
 
-Available Categories
+**How:** Subclasses inherit shared account/entity information and can add their own specific behavior, reducing repeated code.
+</details>
 
 
+<details>
+<summary><b>3. Abstraction — Showing essentials, hiding complexity 🎭(Click here for more)</b></summary>
 
-\- School
+**Where:** The abstract `User` class and `PasswordHasher` utility.
 
-\- Family
+**How:** `User` defines common user behavior while leaving account-specific decisions (role, moderation, deletion permissions) to subclasses. `PasswordHasher` exposes methods such as `hash()` and `matches()` while hiding the password-hashing process.
+</details>
 
-\- Friendship
 
-\- Relationship
+<details>
+<summary><b>4. Polymorphism — Different behavior, same interface 🔄(Click here for more)</b></summary>
 
-\- Mental Health
+**Where:** `AdminUser` and `RegularUser` override methods from `User`.
 
-\- Career
+**How:** Both account types use methods like `canModerate()` and `canDelete(...)`, but their results differ. A regular user can delete their own content, while an admin has moderation permissions to delete content across the community. The program can work with a `User` reference and call the behavior appropriate to the actual user type.
+</details>
 
-\- Hobbies
 
-\- Personal
+<details>
+<summary><b>🧩 Other Java concepts used(Click here for more)</b></summary>
 
-\- Random Thoughts
+- **Classes & Objects:** `User`, `Post`, `Comment`, `Reaction`, `Category`, and `Feeling` represent the application's entities.
+- **Methods:** Actions such as registration, login, post creation/editing/deletion, comments, and reactions are handled through methods.
+- **Exception Handling:** Custom exceptions (`AuthenticationException`, `ValidationException`, `PermissionException`, `NotFoundException`) help handle errors and invalid actions.
+- **Repositories & Services:** Repository classes handle data access; service classes organize application rules and operations.
+</details>
 
 
+## 🛠️ Built With
 
-Available Feelings
+- **Java** — application language
+- **OOP** — object-oriented design
+- **MySQL** — database
+- **JDBC / MySQL Connector/J** — database connection
+- **Git & GitHub** — collaboration and version control
 
+## 🚀 Run Locally
 
+### Requirements
+- Java **17 or newer**
+- VS Code with the **Extension Pack for Java** (or another Java IDE)
+- XAMPP (MySQL) or a configured MySQL server
 
-\- Happy
+### 1. Set up the database
+1. Open XAMPP and start **MySQL**.
+2. Open phpMyAdmin: `http://localhost/phpmyadmin`.
+3. Create/import the `yapspace_db` database using the SQL setup file in the `database/` folder.
+4. Check `src/database/DatabaseConnection.java` and update the connection settings if needed.
 
-\- Sad
+**Default local settings (XAMPP):** host `localhost` · port `3306` · username `root` · password *(blank by default)*.
 
-\- Angry
+### 2. Compile (Windows PowerShell)
+Run this in the project root:
 
-\- Stressed
+```powershell
+$files = Get-ChildItem -Recurse src -Filter *.java | ForEach-Object { $_.FullName }
+javac -cp "lib\mysql-connector-j-26.10.0.jar" -d out $files
+```
 
-\- Excited
+### 3. Run
 
-\- Tired
+```powershell
+java -cp "out;lib\mysql-connector-j-26.10.0.jar" yapspace.Main
+```
 
-\- Confused
+### 4. Open YapSpace
 
-\- Neutral
+Visit **http://localhost:8080** in your browser. To stop the server, press `Ctrl + C` in the terminal.
 
+## 🗂️ Project Structure
 
-
-Technologies Used
-
-
-
-\- Java
-
-\- Object-Oriented Programming (OOP)
-
-\- MySQL
-
-\- JDBC (MySQL Connector/J)
-
-\- Git and GitHub
-
-
-
-Database Setup
-
-
-
-1\. Install and open XAMPP.
-
-2\. Start Apache and MySQL.
-
-3\. Open phpMyAdmin at "http://localhost/phpmyadmin".
-
-4\. Create or import the "yapspace\_db" database using the project's SQL setup script.
-
-5\. Make sure the database connection settings in "src/database/DatabaseConnection.java" match your MySQL configuration.
-
-
-
-Default local configuration:
-
-
-
-\- Database: "yapspace\_db"
-
-\- Host: "localhost"
-
-\- Port: "3306"
-
-\- Username: "root"
-
-\- Password: empty by default in XAMPP
-
-
-
-Run It in VS Code
-
-
-
-1\. Install Java 17 or newer.
-
-2\. Install the Extension Pack for Java in VS Code.
-
-3\. Open the YapSpace project folder.
-
-4\. Make sure XAMPP MySQL is running.
-
-5\. Compile and run the project using the commands below.
-
-
-
-Windows (CMD)
-
-
-
-Compile:
-
-
-
-powershell -NoProfile -Command "$files = Get-ChildItem -Recurse src -Filter \*.java | ForEach-Object { $\_.FullName }; \& javac -cp 'lib\\mysql-connector-j-26.10.0.jar' -d out $files"
-
-
-
-Run:
-
-
-
-java -cp "out;lib\\mysql-connector-j-26.10.0.jar" yapspace.Main
-
-
-
-6\. Open "http://localhost:8080" in your browser.
-
-
-
-Press Ctrl+C to stop the server.
-
-
-
-Project Structure
-
-
-
+```text
 YapSpace/
-
-├── lib/
-
-│   └── mysql-connector-j-26.10.0.jar
-
+├── database/                 # SQL schema/setup
+├── lib/                      # MySQL JDBC driver
 ├── src/
-
-│   ├── database/
-
+│   ├── database/              # Database connection
 │   └── yapspace/
+│       ├── model/              # User, Post, Comment, Reaction, etc.
+│       ├── exception/          # Custom exceptions
+│       ├── repository/         # Database operations
+│       ├── service/            # Business logic and validation
+│       ├── storage/            # Data/storage helpers
+│       └── web/                # Server, routes, controllers, views
+├── assets/
+│   ├── screenshots/            # YapSpace application screenshots
+│   └── team/                   # Team member photos
+└── README.md
+```
 
-│       ├── model/
+## 👩‍💻 The Team
 
-│       ├── exception/
+<div align="center">
 
-│       ├── repository/
+<table align="center">
+  <tr>
+    <td align="center" width="33%">
+      <img src="assets/team/ronabel.png" width="180" alt="Ronabel Doliente"/><br/>
+      <strong>Doliente, Ronabel E.</strong><br/>
+      🧭 Team Leader
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/team/rodalyn.jpg" width="180" alt="Rodalyn Ebora"/><br/>
+      <strong>Ebora, Rodalyn R.</strong><br/>
+      💻 Lead Programmer
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/team/kristelle.jpg" width="180" alt="Kristelle Panganiban"/><br/>
+      <strong>Panganiban, Kristelle Mhae B.</strong><br/>
+      🎨 UI Designer
+    </td>
+  </tr>
+</table>
 
-│       ├── service/
+<div align="center">
 
-│       ├── storage/
+**Team 4 — Ro Ro Row Your Code**  
+*OOP 101 Project*
 
-│       └── web/
+</div>
 
-├── data/
+</div>
 
-├── README.md
+## 🙏 Acknowledgement
 
-└── other project files
+Above all, we thank **God** for guiding us throughout this journey and for granting us the wisdom, knowledge, strength, patience, and perseverance to overcome challenges and complete YapSpace. We are grateful for His guidance and blessings in every step of our work.
 
+We would also like to express our sincere gratitude to our professor, **Ms. Fatima Marie Agdon**, for her guidance, knowledge, support, and valuable feedback throughout the development of YapSpace. Her instruction helped us strengthen our understanding of Java and Object-Oriented Programming and apply these concepts in building our project.
 
+Finally, we thank one another as a team. Through late nights, challenges, debugging, revisions, and moments when things did not work as planned, we learned to keep trying, help each other, and turn ideas into something real. This project is not only the result of code, but also of teamwork, patience, shared effort, and the memories we made along the way.
 
-Object-Oriented Programming Concepts
+We may still have much to learn, but we are proud of how far we have come—and grateful that we got to build this together. YapSpace will always remind us that growth happens not only in the finished product, but in every step, mistake, lesson, and small victory that brought us here.
+---
 
+<div align="center">
 
+### 🌱 Every thought deserves a space. Every feeling deserves to be heard.
 
-Concept| Where It Is Used
+*To anyone who has ever struggled to put their feelings into words: whether what you carry feels small or big, happy or heavy, ordinary or overwhelming, it deserves to be heard. We hope you find a space where you feel safe to speak, a community willing to listen without judgment, and the reminder that you do not have to face everything alone. Your voice matters. Your story matters. You matter.*
 
-Classes and Objects| User, Post, Comment, Reaction, Category
+**Made with 💜, faith, effort, and teamwork by Team 4 — Ro Ro Row Your Code**
 
-Methods| register(), login(), createPost(), editPost(), deletePost()
-
-Encapsulation| Private fields and getters/setters
-
-Inheritance| RegularUser and AdminUser extend User
-
-Abstraction| Abstract classes and PasswordHasher
-
-Polymorphism| Different user behaviors through overridden methods
-
-Exception Handling| Try-catch blocks and custom exceptions
-
-Data Handling| ArrayLists and MySQL database repositories
-
-
-
-Not Included
-
-
-
-Search, reporting posts, image uploads, and private messaging are not included in the current version.
-
+</div>
